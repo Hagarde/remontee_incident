@@ -24,20 +24,19 @@ LOCALISATION_SUR_SITE = ["BR", "Machine Industriel"]
 # Centralisation des fonctions réuitlisées partout 
 
 def SELECT_BOX_TYPE_ACTE (): return st.selectbox("Type d'acte", TYPE_ACTE.get("Tertiaire", ["Indéfini"]))
-def SELECT_BOX_CAT_CIBLE (): return st.selectbox("Catégorie Cible", sorted(list(CATEGORIES_CIBLES.keys())) + ["Autre"])
+def SELECT_BOX_CAT_CIBLE (): return st.selectbox("Type de cible", sorted(list(CATEGORIES_CIBLES.keys())) + ["Autre"])
 def SELECT_OBJET_SPECIFIQUE (cat_cible) : 
     if cat_cible == "Autre":
         liste_objets = ["Autre"]
     else:
-
         liste_objets = sorted(CATEGORIES_CIBLES.get(cat_cible, [])) + ["Autre"]      
-    return st.selectbox("Objet Spécifique", liste_objets)
+    return st.selectbox("Sous-type de la cible", liste_objets)
 def SELECT_BOX_OBSTACLE_FRANCHI () : return st.selectbox("Obstacle franchi", sorted(BARRIERES) + ["Autre"])  
 def INPUT_COUT_ESTIME () : return st.number_input("Coût estimé (k€)", min_value=0, step=1)  
 def SELECT_BOX_LOCALISATION_SUR_SITE () : return st.selectbox("Localisation sur site de l'incident" , sorted(LOCALISATION_SUR_SITE) + ["Autre"])
 def INPUT_DESCRIPTION () : st.text_area("Description de l'incident")
-def SELECT_BOX_MESURE_PROVISOIRE () : return st.selectbox("Mesures provisoires ?", ['Oui', 'Non'], placeholder=None)
-def SELECT_BOX_SIV_DECLENCHE () : return st.selectbox("Si SIV installé, as-t-il été déclenché ?", ['Oui', 'Non'], placeholder=None)
+def SELECT_BOX_MESURE_PROVISOIRE () : return st.selectbox("Est-ce que des mesures provisoires ont été mises en place ?", ['Oui', 'Non'], placeholder=None)
+def SELECT_BOX_SIV_DECLENCHE () : return st.selectbox("Si un SIV est installé, a-t-il été déclenché ?", ['Oui', 'Non', "SIV absent du site"], placeholder=None)
 def INPUT_PLAINTE () : return  st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
 def UPLOAD_PLAINTE () : return st.file_uploader("PV ou Document")
 
