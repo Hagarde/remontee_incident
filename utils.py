@@ -14,16 +14,14 @@ CATEGORIES_CIBLES = {
 }
 BARRIERES = ["Aucune", "Portail", "Grillage simple sans bavolet", "Grillage simple avec bavolet" "Clôture électrifiée", "Mur", "Contrôle d'accès"]
 TYPE_ACTE = { 
-    "Personnel" : ["Aggression"],
-    "Tertiaire" : ["Aggression","Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Agression", "Inscription/Ajout illicite"],
-    "Chantier" : ["Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Agression", "Inscription/Ajout illicite", "Aggression"], 
+    "Tertiaire" : ["Aggression","Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Inscription/Ajout illicite"],
     "Primaire" : [ "Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Agression", "Inscription/Ajout illicite", "Sciage", "Déboulonage", "Aggression"]
 }
 LOCALISATION_SUR_SITE = ["BR", "Machine Industriel"]
 
 # Centralisation des fonctions réuitlisées partout 
 
-def SELECT_BOX_TYPE_ACTE (): return st.selectbox("Type d'acte", TYPE_ACTE.get("Tertiaire", ["Indéfini"]))
+def SELECT_BOX_TYPE_ACTE (): return st.selectbox("Type d'acte", sorted(TYPE_ACTE.get("Tertiaire", ["Indéfini"]))+["Autre"])
 def SELECT_BOX_CAT_CIBLE (): return st.selectbox("Type de cible", sorted(list(CATEGORIES_CIBLES.keys())) + ["Autre"])
 def SELECT_OBJET_SPECIFIQUE (cat_cible) : 
     if cat_cible == "Autre":

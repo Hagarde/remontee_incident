@@ -23,15 +23,22 @@ loc_data = utils.afficher_selecteurs_localisation(referentiel="GMR")
 st.subheader("2. Qualification de l'incident")
 
 col_interactif_1, col_interactif_2 , col_interactif_3, col_interactif_4= st.columns(4)
+acte_type_input = ""
+cat_cible_input = ""
+cible_specifique_input = ""
+localisation_sur_site_input = ""
 with col_interactif_1:
     acte_type = utils.SELECT_BOX_TYPE_ACTE()
+    if acte_type == "Autre" : acte_type_input = st.text_input("Entrez la catégorie pertinente absente du menu déroulant", key="type_acte")
 with col_interactif_2:
     cat_cible = utils.SELECT_BOX_CAT_CIBLE()    
+    if cat_cible == "Autre" : cat_cible_input = st.text_input("Entrez la catégorie pertinente absente du menu déroulant", key="cat_cible")
 with col_interactif_3:
     cible_specifique = utils.SELECT_OBJET_SPECIFIQUE(cat_cible)
+    if cible_specifique == "Autre" : cible_specifique_input = st.text_input("Entrez la catégorie pertinente absente du menu déroulant", key="cible_specifique")
 with col_interactif_4 :
     localisation_sur_site = utils.SELECT_BOX_LOCALISATION_SUR_SITE()
-
+    if localisation_sur_site == "Autre" : localisation_sur_site_input = st.text_input("Entrez la catégorie pertinente absente du menu déroulant", key="localisation_sur_site")
 
 st.subheader("3. Détails techniques")
 
