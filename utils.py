@@ -131,7 +131,6 @@ def afficher_selecteurs_localisation(referentiel):
 
     # 5. Affichage "Contextuel" (La déduction automatique)
     if selection_row is not None:
-        st.markdown("---")
         if mode_loc == "🏢 Site Interne (Poste)" : 
             resultat = {
                 "mode": "interne",
@@ -146,8 +145,7 @@ def afficher_selecteurs_localisation(referentiel):
                 "mode": "ville",
                 "region": selection_row["Région"],
                 "departement": selection_row["Département"],
-                "gmr": "Hors GMR",
-                "identifiant": f"{selection_row['Ville']} ({selection_row['CodePostal']})",
+                "gmr": "Hors GMR"
             }
             
     return resultat
