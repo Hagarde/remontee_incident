@@ -45,7 +45,10 @@ st.subheader("3. Détails techniques")
 c1, c2 = st.columns(2)
 with c1:
     reparation_provisioire = utils.SELECT_BOX_MESURE_PROVISOIRE()
+    cout_estime = utils.INPUT_COUT_ESTIME()
 with c2 : 
+    obstacle_franchies = utils.SELECT_BOX_OBSTACLE_FRANCHI()
+    degat_obstacle = utils.SELECT_BOX_DEGAT_OBSTACLE()
     siv_present = utils.SELECT_BOX_SIV_DECLENCHE()
 description = utils.INPUT_DESCRIPTION()
 

@@ -6,18 +6,19 @@ import os
 # --- Données de référence ---
 
 CATEGORIES_CIBLES = {
-    "Infrastructures Réseau": ["Pylône", "Câble aérien", "Câble souterrain", "Transformateur", "Télécom"],
+    "Infrastructures Réseau": ["Pylône", "Pylône aérosouterain", "Câble aérien", "Câble souterrain", "Transformateur", "Télécom"],
     "Bâtiments & Sites": ["Bâtiment Industriel", "Bâtiment de relayage", "Mur", "Portail"],
-    "Bien matériel": ["Véhicule", "Outillage", "Touret", "Carburant", "PC/Téléphone"],
+    "Bien matériel": ["Véhicule", "Outillage", "Touret", "Carburant", "PC/Téléphone", "Groupe Electrogène (GE)"],
     "Employé": ["Employé RTE", "Prestataire"],
     "Aucun": ["Aucun"],
 }
-BARRIERES = ["Aucune", "Portail", "Grillage simple sans bavolet", "Grillage simple avec bavolet" "Clôture électrifiée", "Mur", "Contrôle d'accès"]
+BARRIERES = ["Aucune", "Portail", "Grillage simple sans bavolet", "Grillage simple avec bavolet", "Clôture électrifiée", "Mur", "Contrôle d'accès"]
 TYPE_ACTE = { 
-    "Tertiaire" : ["Aggression","Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Inscription/Ajout illicite"],
-    "Primaire" : [ "Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Agression", "Inscription/Ajout illicite", "Sciage", "Déboulonage", "Aggression"]
+    "Tertiaire" : ["Aggression","Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Inscription/Ajout illicite", "Mouvement social"],
+    "Primaire" : [ "Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Agression", "Inscription/Ajout illicite", "Sciage", "Déboulonage", "Aggression", "Mouvement social"]
 }
 LOCALISATION_SUR_SITE = ["BR", "Machine Industriel"]
+DEGAT_OBSTACLE = ["Aucun", "Enfoncé", "Découpé", "Brulé"]
 
 # Centralisation des fonctions réuitlisées partout 
 
@@ -30,6 +31,7 @@ def SELECT_OBJET_SPECIFIQUE (cat_cible) :
         liste_objets = sorted(CATEGORIES_CIBLES.get(cat_cible, [])) + ["Autre"]      
     return st.selectbox("Sous-type de la cible", liste_objets)
 def SELECT_BOX_OBSTACLE_FRANCHI () : return st.selectbox("Obstacle franchi", sorted(BARRIERES) + ["Autre"])  
+def SELECT_BOX_DEGAT_OBSTACLE () : return st.selectbox("Dégat sur l'obstacle", sorted(DEGAT_OBSTACLE))
 def INPUT_COUT_ESTIME () : return st.number_input("Coût estimé (k€)", min_value=0, step=1)  
 def SELECT_BOX_LOCALISATION_SUR_SITE () : return st.selectbox("Localisation sur site de l'incident" , sorted(LOCALISATION_SUR_SITE) + ["Autre"])
 def INPUT_DESCRIPTION () : st.text_area("Description de l'incident")
