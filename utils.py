@@ -84,19 +84,20 @@ def afficher_selecteurs_localisation(referentiel):
     Une fois sélectionné, déduit et affiche le contexte (Région, Dépt, etc.)
     """
     date_evt = st.date_input("Date de l'événement")
-    
+    champ_entite_RTE = "🏢 Entité RTE"
+    champ_adresse_civile = "🌍 Adresse Civile (Ville)"
     mode_loc = st.radio(
         "Référentiel :",
-        ["🏢 Entité RTE", "🌍 Adresse Civile (Ville)"],
+        [champ_entite_RTE, champ_adresse_civile],
         horizontal=(referentiel == "Ville")
     )
     
     # 2. Chargement du bon DataFrame en fonction du choix
-    if mode_loc == "🏢 Entité RTE":
+    if mode_loc == champ_entite_RTE:
         df_source = charger_locations_interne()
         placeholder_text = "Tapez l'identifiant de poste ou son nom"
         label_resultat = "Poste électrique"
-    else:
+    elif mode_loc == champ_adresse_civile :
         df_source = charger_villes_france()
         placeholder_text = "Tapez le nom de la ville ou le code postal de la ville la plus proche (ex : PARIS)"
         label_resultat = "Ville"
@@ -130,7 +131,7 @@ def afficher_selecteurs_localisation(referentiel):
 
     # 5. Affichage "Contextuel" (La déduction automatique)
     if selection_row is not None:
-        if mode_loc == "🏢 Entité RTE" : 
+        if mode_loc == champ_entite_RTE : 
             resultat = {
                 "mode": "interne",
                 "region": selection_row["Région"],
@@ -139,7 +140,7 @@ def afficher_selecteurs_localisation(referentiel):
                 "gdp": selection_row["GDP"],
                 "identifiant": selection_row["ID_Poste"], # Juste le code (ex: MEREN)
             }
-        elif mode_loc == "Ville": # Mode Ville
+        elif mode_loc == champ_adresse_civile: # Mode Ville
             resultat = {
                 "mode": "ville",
                 "region": selection_row["Région"],
