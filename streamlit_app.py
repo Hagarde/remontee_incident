@@ -22,7 +22,7 @@ st.subheader("1. Date et localisation ")
 loc_data = utils.afficher_selecteurs_localisation(referentiel="GMR")
 
 st.subheader("2. Qualification de l'incident")
-
+st.text("Veuillez entrer le type d'acte semblant le plus grave (Ex : Intrusion et Sabotage --> Sabotage)")
 col_interactif_1, col_interactif_2 , col_interactif_3, col_interactif_4= st.columns(4)
 acte_type_input = ""
 cat_cible_input = ""

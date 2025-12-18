@@ -12,10 +12,10 @@ CATEGORIES_CIBLES = {
     "Employé": ["Employé RTE", "Prestataire"],
     "Aucun": ["Aucun"],
 }
-BARRIERES = ["Aucune", "Portail", "Grillage simple sans bavolet", "Grillage simple avec bavolet", "Clôture électrifiée", "Mur", "Contrôle d'accès"]
+BARRIERES = ["Aucune", "Portail", "Portillion", "Grillage simple sans bavolet", "Grillage simple avec bavolet", "Clôture électrifiée", "Mur", "Contrôle d'accès"]
 TYPE_ACTE = { 
-    "Tertiaire" : ["Aggression","Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Inscription/Ajout illicite", "Mouvement social"],
-    "Primaire" : [ "Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Agression", "Inscription/Ajout illicite", "Sciage", "Déboulonage", "Aggression", "Mouvement social"]
+    "Tertiaire" : ["Aggression","Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Inscription/Ajout illicite", "Malveilliance interne"],
+    "Primaire" : [ "Vol", "Dégradation / Vandalisme", "Intrusion", "Incendie volontaire", "Sabotage", "Agression", "Inscription/Ajout illicite", "Sciage", "Déboulonage", "Aggression", "Malveilliance interne"]
 }
 LOCALISATION_SUR_SITE = ["BR", "Machine Industriel"]
 DEGAT_OBSTACLE = ["Aucun", "Enfoncé", "Découpé", "Brulé"]
