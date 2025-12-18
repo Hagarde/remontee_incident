@@ -147,5 +147,5 @@ def afficher_selecteurs_localisation(referentiel):
                 "departement": selection_row["Département"],
                 "gmr": "Hors GMR"
             }
-            
+
     return resultat

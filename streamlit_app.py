@@ -1,6 +1,7 @@
 # streamlit_app.py
 import streamlit as st
 import utils
+import generate_pdf
 
 st.set_page_config(page_title="Portail Incidents", page_icon="🛡️", layout="wide")
 
@@ -61,3 +62,21 @@ with colo2 :
     plainte_file = utils.UPLOAD_PLAINTE()
 with st.form("form_intrusion"):
     submit = st.form_submit_button("Envoyer Rapport 🚨")
+pdf_bytes = generate_pdf.generer_pdf({
+        "secteur": nature_incident,
+        "loc_data": loc_data,
+        "acte": acte_type_input if acte_type == "Autre" else acte_type,
+        "cat_cible": cat_cible if cat_cible != "Autre" else cat_cible_input,
+        "cible_spec": cible_specifique if acte_type != "Autre" else cible_specifique_input,
+        "loc_site": localisation_sur_site if acte_type != "Autre" else localisation_sur_site_input,
+        "cout": cout_estime,
+        "obstacle": obstacle_franchies,
+        "desc": description,
+        "plainte": statut_plainte
+})
+st.download_button(
+        label="🚨 Générer et Télécharger le Rapport",
+        data=pdf_bytes,
+        file_name="rapport_incident.pdf",
+        mime="application/pdf"
+)
