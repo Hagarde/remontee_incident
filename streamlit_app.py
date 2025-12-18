@@ -64,7 +64,7 @@ with st.form("form_intrusion"):
     submit = st.form_submit_button("Envoyer Rapport 🚨")
 pdf_bytes = generate_pdf.generer_pdf({
         "secteur": nature_incident,
-        "loc_data": loc_data,
+        "loc_data": loc_data["mode"] if loc_data["mode"] == "Ville" else loc_data["gmr"],
         "acte": acte_type_input if acte_type == "Autre" else acte_type,
         "cat_cible": cat_cible if cat_cible != "Autre" else cat_cible_input,
         "cible_spec": cible_specifique if acte_type != "Autre" else cible_specifique_input,

@@ -100,7 +100,6 @@ def afficher_selecteurs_localisation(referentiel):
         df_source = charger_villes_france()
         placeholder_text = "Tapez le nom de la ville ou le code postal de la ville la plus proche (ex : PARIS)"
         label_resultat = "Ville"
-
     resultat = {}
 
     # 3. Barre de Recherche Mutualisée
@@ -131,7 +130,7 @@ def afficher_selecteurs_localisation(referentiel):
 
     # 5. Affichage "Contextuel" (La déduction automatique)
     if selection_row is not None:
-        if mode_loc == "🏢 Site Interne (Poste)" : 
+        if mode_loc == "🏢 Entité RTE" : 
             resultat = {
                 "mode": "interne",
                 "region": selection_row["Région"],
@@ -140,12 +139,14 @@ def afficher_selecteurs_localisation(referentiel):
                 "gdp": selection_row["GDP"],
                 "identifiant": selection_row["ID_Poste"], # Juste le code (ex: MEREN)
             }
-        else: # Mode Ville
+        elif mode_loc == "Ville": # Mode Ville
             resultat = {
                 "mode": "ville",
                 "region": selection_row["Région"],
                 "departement": selection_row["Département"],
-                "gmr": "Hors GMR"
+                "gmr": "Hors Entité RTE",
+                "gdp": "Hors Entité RTE",  
+                "ville" : selection_row["Ville"]
             }
 
     return resultat
