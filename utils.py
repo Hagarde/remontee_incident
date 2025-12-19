@@ -101,7 +101,7 @@ def afficher_selecteurs_localisation(referentiel):
         df_source = charger_villes_france()
         placeholder_text = "Tapez le nom de la ville ou le code postal de la ville la plus proche (ex : PARIS)"
         label_resultat = "Ville"
-    resultat = {}
+    resultat = {"mode": "Aucune localisation", "gmr" : "Aucune localisaiton sélectionnée"}
 
     # 3. Barre de Recherche Mutualisée
     col_search, col_status = st.columns([3, 1])
@@ -149,5 +149,4 @@ def afficher_selecteurs_localisation(referentiel):
                 "gdp": "Hors Entité RTE",  
                 "ville" : selection_row["Ville"]
             }
-
     return resultat
