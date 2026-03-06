@@ -2,7 +2,6 @@ import streamlit as st
 import os
 from datetime import datetime
 
-# Import des modules personnalisés
 import utils        
 import generate_pdf 
 
@@ -13,75 +12,97 @@ st.set_page_config(page_title="Portail acte de malveillances", page_icon="🛡�
 MEDIA_ROOT = "./data/media"
 os.makedirs(MEDIA_ROOT, exist_ok=True)
 
-def sauvegarder_fichier_local(uploaded_file):
-    if uploaded_file is None: return None
-    try:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        safe_name = f"{timestamp}_{uploaded_file.name}".replace(" ", "_")
-        file_path = os.path.join(MEDIA_ROOT, safe_name)
-        with open(file_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        return file_path
-    except Exception as e:
-        st.error(f"❌ Erreur sauvegarde fichier : {e}")
-        return None
+# Initialisation de l'étape courante dans la mémoire de Streamlit
+if 'etape' not in st.session_state:
+    st.session_state.etape = 1
+
+# Fonctions pour naviguer entre les étapes
+def etape_suivante():
+    st.session_state.etape += 1
+
+def etape_precedente():
+    st.session_state.etape -= 1
 
 # =============================================================================
 # UI PRINCIPALE
 # =============================================================================
 st.title("🛡️ Detectout")
-st.markdown("Veuillez renseigner les 4 étapes ci-dessous pour déclarer l'acte de malveillance.")
 st.markdown("---")
 
-# Création des 4 pages (onglets)
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📍 1. Localisation", 
-    "📝 2. Qualification", 
-    "🛠️ 3. Détails techniques", 
-    "⚖️ 4. Juridique & Validation"
-])
+# --- BARRE DE PROGRESSION VISUELLE ---
+etapes_noms = ["1. Localisation", "2. Qualification", "3. Détails techniques", "4. Juridique & Validation"]
+st.progress(st.session_state.etape / 4)
+st.markdown(f"**Étape {st.session_state.etape} sur 4 : {etapes_noms[st.session_state.etape - 1]}**")
+st.markdown("---")
 
-# -----------------------------------------------------------------------------
-# PAGE 1 : LOCALISATION
-# -----------------------------------------------------------------------------
-with tab1:
+# =============================================================================
+# ÉTAPE 1 : LOCALISATION
+# =============================================================================
+if st.session_state.etape == 1:
     st.subheader("1. Date et Localisation")
     loc_data = utils.afficher_selecteurs_localisation()
     is_urgent = st.checkbox("⚠️ Evénement URGENT", help="Cochez si une intervention immédiate est requise.")
+    
+    # On sauvegarde temporairement dans la session pour ne pas perdre l'info
+    if loc_data:
+        st.session_state.loc_data = loc_data
+    if 'is_urgent' not in st.session_state:
+        st.session_state.is_urgent = False
+    st.session_state.is_urgent = is_urgent
 
-# -----------------------------------------------------------------------------
-# PAGE 2 : QUALIFICATION
-# -----------------------------------------------------------------------------
-with tab2:
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col3:
+        # On empêche de passer à la suite si la localisation n'est pas remplie
+        if st.button("Suivant ➡️", use_container_width=True, disabled=loc_data is None):
+            etape_suivante()
+
+# =============================================================================
+# ÉTAPE 2 : QUALIFICATION
+# =============================================================================
+elif st.session_state.etape == 2:
     st.subheader("2. Qualification des faits")
     st.info("💡 Vous pouvez ajouter plusieurs actes pour un même acte de malveillance.")
     liste_faits_saisis = utils.gerer_saisie_actes()
+    st.session_state.liste_faits_saisis = liste_faits_saisis
 
-# -----------------------------------------------------------------------------
-# PAGE 3 : DÉTAILS TECHNIQUES
-# -----------------------------------------------------------------------------
-with tab3:
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col1:
+        st.button("⬅️ Précédent", on_click=etape_precedente, use_container_width=True)
+    with col3:
+        st.button("Suivant ➡️", on_click=etape_suivante, use_container_width=True)
+
+# =============================================================================
+# ÉTAPE 3 : DÉTAILS TECHNIQUES
+# =============================================================================
+elif st.session_state.etape == 3:
     st.subheader("3. Détails techniques")
     c1, c2 = st.columns(2)
 
     with c1:
-        cout_estime = utils.INPUT_COUT_ESTIME()
-        reparation_provisioire = utils.SELECT_BOX_MESURE_PROVISOIRE()
+        st.session_state.cout_estime = utils.INPUT_COUT_ESTIME()
+        st.session_state.reparation_provisioire = utils.SELECT_BOX_MESURE_PROVISOIRE()
     with c2:
-        # Assurez-vous que SELECT_OBSTACLE existe bien dans votre utils.py
-        obstacles_selectionnes = utils.SELECT_OBSTACLE() if hasattr(utils, 'SELECT_OBSTACLE') else []
-        siv_present = utils.SELECT_BOX_SIV_DECLENCHE()
+        st.session_state.obstacles_selectionnes = utils.SELECT_OBSTACLE() if hasattr(utils, 'SELECT_OBSTACLE') else []
+        st.session_state.siv_present = utils.SELECT_BOX_SIV_DECLENCHE()
 
-    description = utils.INPUT_DESCRIPTION()
+    st.session_state.description = utils.INPUT_DESCRIPTION()
     
     st.warning("""**Avertissement relatif à la protection des données personnelles**
-                
 Pour rappel, dans les zones de commentaire libre, vous devez impérativement rédiger de façon objective et jamais excessive ou insultante. Toute donnée considérée comme sensible (origine raciale ou ethnique, opinions politiques, philosophiques ou religieuses, appartenance syndicale, données relatives à la santé ou à la vie sexuelle) doit être exclue. Toute donnée permettant d’identifier des tiers doit être également exclue.""")
 
-# -----------------------------------------------------------------------------
-# PAGE 4 : JURIDIQUE & ACTIONS FINALES
-# -----------------------------------------------------------------------------
-with tab4:
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col1:
+        st.button("⬅️ Précédent", on_click=etape_precedente, use_container_width=True)
+    with col3:
+        st.button("Suivant ➡️", on_click=etape_suivante, use_container_width=True)
+
+# =============================================================================
+# ÉTAPE 4 : JURIDIQUE & ACTIONS FINALES
+# =============================================================================
+elif st.session_state.etape == 4:
     st.subheader("4. Aspects juridiques & Pièces jointes")
     col_jur_1, col_jur_2 = st.columns(2)
     with col_jur_1:
@@ -92,50 +113,41 @@ with tab4:
     
     st.markdown("---")
     
-    # =========================================================================
-    # PRÉPARATION DES DONNÉES ET VALIDATION
-    # =========================================================================
-    donnees_valides = (loc_data is not None)
-    final_data = {}
+    # Préparation des données finales
+    final_data = st.session_state.loc_data.copy()
+    obs_final = st.session_state.obstacles_selectionnes if st.session_state.obstacles_selectionnes else ["Aucun"]
 
-    if donnees_valides:
-        final_data = loc_data.copy()
-        
-        obs_final = obstacles_selectionnes if obstacles_selectionnes else ["Aucun"]
+    final_data.update({
+        "liste_faits": st.session_state.liste_faits_saisis,
+        "obstacles_list": obs_final, 
+        "cout": st.session_state.cout_estime,
+        "mesure_provisoire": st.session_state.reparation_provisioire,
+        "siv": st.session_state.siv_present,
+        "plainte": statut_plainte,
+        "desc": st.session_state.description,
+        "urgent": st.session_state.is_urgent,
+        "chemin_fichier": None 
+    })
+    
+    if st.session_state.liste_faits_saisis:
+        final_data["acte"] = st.session_state.liste_faits_saisis[0].get('acte')
+        final_data["cat_cible"] = st.session_state.liste_faits_saisis[0].get('categorie')
+        final_data["cible_spec"] = st.session_state.liste_faits_saisis[0].get('objet')
+        final_data["obstacle"] = ", ".join(obs_final)
+    else:
+        final_data["acte"] = "Incident"
+        final_data["obstacle"] = "Aucun"
 
-        final_data.update({
-            "liste_faits": liste_faits_saisis,
-            "obstacles_list": obs_final, 
-            "cout": cout_estime,
-            "mesure_provisoire": reparation_provisioire,
-            "siv": siv_present,
-            "plainte": statut_plainte,
-            "desc": description,
-            "urgent": is_urgent,
-            "chemin_fichier": None 
-        })
-        
-        if liste_faits_saisis:
-            final_data["acte"] = liste_faits_saisis[0].get('acte')
-            final_data["cat_cible"] = liste_faits_saisis[0].get('categorie')
-            final_data["cible_spec"] = liste_faits_saisis[0].get('objet')
-            final_data["obstacle"] = ", ".join(obs_final)
-        else:
-            final_data["acte"] = "Incident"
-            final_data["obstacle"] = "Aucun"
-
-    # =========================================================================
-    # BOUTONS D'ACTION
-    # =========================================================================
+    # BOUTONS D'ACTION FINALE
     st.subheader("🚀 Validation finale")
     
-    if not donnees_valides:
-        st.error("⚠️ Veuillez renseigner la localisation (Étape 1) avant de pouvoir enregistrer.")
-        
-    col_pdf, col_db = st.columns(2)
+    col_prev, col_pdf, col_db = st.columns([1, 1, 1])
+
+    with col_prev:
+        st.button("⬅️ Précédent", on_click=etape_precedente, use_container_width=True)
 
     with col_pdf:
-        if st.button("📄 Générer PDF", disabled=not donnees_valides):
+        if st.button("📄 Générer PDF", use_container_width=True):
             try:
                 pdf_bytes = generate_pdf.generer_pdf(final_data)
                 nom_pdf = f"Rapport_{final_data.get('date', datetime.now()).strftime('%Y-%m-%d')}_Securite.pdf"
@@ -145,7 +157,7 @@ with tab4:
                 st.error(f"Erreur PDF : {e}")
 
     with col_db:
-        if st.button("💾 Enregistrer en Base", type="primary", use_container_width=True, disabled=not donnees_valides):
+        if st.button("💾 Enregistrer en Base", type="primary", use_container_width=True):
             with st.spinner("Enregistrement..."):
                 if uploaded_file:
                     path = sauvegarder_fichier_local(uploaded_file)
@@ -156,6 +168,8 @@ with tab4:
                 if result and result.get("success"):
                     st.success(f"✅ Enregistré avec succès ! (ID: {result['id']})")
                     st.balloons()
+                    # Optionnel : réinitialiser le formulaire après un succès
+                    # st.session_state.clear()
                 else:
                     st.error("❌ Erreur SQL")
                     st.error(result.get("error") if result else "Pas de réponse")
