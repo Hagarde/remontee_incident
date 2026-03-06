@@ -1,82 +1,163 @@
-# streamlit_app.py
 import streamlit as st
-import utils
-import generate_pdf
+import os
+from datetime import datetime
 
-st.set_page_config(page_title="Portail Incidents", page_icon="🛡️", layout="wide")
+# Import des modules personnalisés
+import utils        
+import generate_pdf 
 
+# =============================================================================
+# CONFIGURATION GÉNÉRALE
+# =============================================================================
+st.set_page_config(page_title="Portail acte de malveillances", page_icon="🛡️", layout="wide")
+MEDIA_ROOT = "./data/media"
+os.makedirs(MEDIA_ROOT, exist_ok=True)
+
+def sauvegarder_fichier_local(uploaded_file):
+    if uploaded_file is None: return None
+    try:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        safe_name = f"{timestamp}_{uploaded_file.name}".replace(" ", "_")
+        file_path = os.path.join(MEDIA_ROOT, safe_name)
+        with open(file_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        return file_path
+    except Exception as e:
+        st.error(f"❌ Erreur sauvegarde fichier : {e}")
+        return None
+
+# =============================================================================
+# UI PRINCIPALE
+# =============================================================================
 st.title("🛡️ Detectout")
-
-nature_incident = st.selectbox(
-    "Quel secteur d'acitivité de RTE  ?",
-    [
-        "Industriel",
-        "Autre (Chantier, Personnel RTE, Site Tertiaire)"
-    ], index=None, placeholder="Choisissez une option"
-)
-
+st.markdown("Veuillez renseigner les 4 étapes ci-dessous pour déclarer l'acte de malveillance.")
 st.markdown("---")
 
-st.subheader("1. Date et localisation ")
+# Création des 4 pages (onglets)
+tab1, tab2, tab3, tab4 = st.tabs([
+    "📍 1. Localisation", 
+    "📝 2. Qualification", 
+    "🛠️ 3. Détails techniques", 
+    "⚖️ 4. Juridique & Validation"
+])
 
-loc_data = utils.afficher_selecteurs_localisation(referentiel="GMR")
+# -----------------------------------------------------------------------------
+# PAGE 1 : LOCALISATION
+# -----------------------------------------------------------------------------
+with tab1:
+    st.subheader("1. Date et Localisation")
+    loc_data = utils.afficher_selecteurs_localisation()
+    is_urgent = st.checkbox("⚠️ Evénement URGENT", help="Cochez si une intervention immédiate est requise.")
 
-st.subheader("2. Qualification de l'incident")
-st.text("Veuillez entrer le type d'acte semblant le plus grave (Ex : Intrusion et Sabotage --> Sabotage)")
-col_interactif_1, col_interactif_2 , col_interactif_3, col_interactif_4= st.columns(4)
-acte_type_input = ""
-cat_cible_input = ""
-cible_specifique_input = ""
-localisation_sur_site_input = ""
-with col_interactif_1:
-    acte_type = utils.SELECT_BOX_TYPE_ACTE()
-    if acte_type == "Autre" : acte_type_input = st.text_input("Entrez la catégorie pertinente absente du menu déroulant", key="type_acte")
-with col_interactif_2:
-    cat_cible = utils.SELECT_BOX_CAT_CIBLE()    
-    if cat_cible == "Autre" : cat_cible_input = st.text_input("Entrez la catégorie pertinente absente du menu déroulant", key="cat_cible")
-with col_interactif_3:
-    cible_specifique = utils.SELECT_OBJET_SPECIFIQUE(cat_cible)
-    if cible_specifique == "Autre" : cible_specifique_input = st.text_input("Entrez la catégorie pertinente absente du menu déroulant", key="cible_specifique")
-with col_interactif_4 :
-    localisation_sur_site = utils.SELECT_BOX_LOCALISATION_SUR_SITE()
-    if localisation_sur_site == "Autre" : localisation_sur_site_input = st.text_input("Entrez la catégorie pertinente absente du menu déroulant", key="localisation_sur_site")
+# -----------------------------------------------------------------------------
+# PAGE 2 : QUALIFICATION
+# -----------------------------------------------------------------------------
+with tab2:
+    st.subheader("2. Qualification des faits")
+    st.info("💡 Vous pouvez ajouter plusieurs actes pour un même acte de malveillance.")
+    liste_faits_saisis = utils.gerer_saisie_actes()
 
-st.subheader("3. Détails techniques")
+# -----------------------------------------------------------------------------
+# PAGE 3 : DÉTAILS TECHNIQUES
+# -----------------------------------------------------------------------------
+with tab3:
+    st.subheader("3. Détails techniques")
+    c1, c2 = st.columns(2)
 
-c1, c2 = st.columns(2)
-with c1:
-    reparation_provisioire = utils.SELECT_BOX_MESURE_PROVISOIRE()
-    cout_estime = utils.INPUT_COUT_ESTIME()
-with c2 : 
-    obstacle_franchies = utils.SELECT_BOX_OBSTACLE_FRANCHI()
-    degat_obstacle = utils.SELECT_BOX_DEGAT_OBSTACLE()
-    siv_present = utils.SELECT_BOX_SIV_DECLENCHE()
-description = utils.INPUT_DESCRIPTION()
+    with c1:
+        cout_estime = utils.INPUT_COUT_ESTIME()
+        reparation_provisioire = utils.SELECT_BOX_MESURE_PROVISOIRE()
+    with c2:
+        # Assurez-vous que SELECT_OBSTACLE existe bien dans votre utils.py
+        obstacles_selectionnes = utils.SELECT_OBSTACLE() if hasattr(utils, 'SELECT_OBSTACLE') else []
+        siv_present = utils.SELECT_BOX_SIV_DECLENCHE()
 
-st.subheader("4. Aspects juridiques")
+    description = utils.INPUT_DESCRIPTION()
+    
+    st.warning("""**Avertissement relatif à la protection des données personnelles**
+                
+Pour rappel, dans les zones de commentaire libre, vous devez impérativement rédiger de façon objective et jamais excessive ou insultante. Toute donnée considérée comme sensible (origine raciale ou ethnique, opinions politiques, philosophiques ou religieuses, appartenance syndicale, données relatives à la santé ou à la vie sexuelle) doit être exclue. Toute donnée permettant d’identifier des tiers doit être également exclue.""")
 
-colo1, colo2 = st.columns(2)
-with colo1 : 
-    statut_plainte = utils.INPUT_PLAINTE ()
-with colo2 : 
-    plainte_file = utils.UPLOAD_PLAINTE()
-with st.form("form_intrusion"):
-    submit = st.form_submit_button("Envoyer Rapport 🚨")
-pdf_bytes = generate_pdf.generer_pdf({
-        "secteur": nature_incident,
-        "loc_data": loc_data["ville"] if loc_data["mode"] == "ville" else loc_data["gmr"],
-        "acte": acte_type_input if acte_type == "Autre" else acte_type,
-        "cat_cible": cat_cible if cat_cible != "Autre" else cat_cible_input,
-        "cible_spec": cible_specifique if acte_type != "Autre" else cible_specifique_input,
-        "loc_site": localisation_sur_site if acte_type != "Autre" else localisation_sur_site_input,
-        "cout": cout_estime,
-        "obstacle": obstacle_franchies,
-        "desc": description,
-        "plainte": statut_plainte
-})
-st.download_button(
-        label="🚨 Générer et Télécharger le Rapport",
-        data=pdf_bytes,
-        file_name="rapport_incident.pdf",
-        mime="application/pdf"
-)
+# -----------------------------------------------------------------------------
+# PAGE 4 : JURIDIQUE & ACTIONS FINALES
+# -----------------------------------------------------------------------------
+with tab4:
+    st.subheader("4. Aspects juridiques & Pièces jointes")
+    col_jur_1, col_jur_2 = st.columns(2)
+    with col_jur_1:
+        statut_plainte = utils.INPUT_PLAINTE()
+    with col_jur_2:
+        st.markdown("**Ajouter une pièce jointe (plainte, photos, ...)**")
+        uploaded_file = st.file_uploader("Format : PDF, JPG, PNG", type=['pdf', 'png', 'jpg', 'jpeg'])
+    
+    st.markdown("---")
+    
+    # =========================================================================
+    # PRÉPARATION DES DONNÉES ET VALIDATION
+    # =========================================================================
+    donnees_valides = (loc_data is not None)
+    final_data = {}
+
+    if donnees_valides:
+        final_data = loc_data.copy()
+        
+        obs_final = obstacles_selectionnes if obstacles_selectionnes else ["Aucun"]
+
+        final_data.update({
+            "liste_faits": liste_faits_saisis,
+            "obstacles_list": obs_final, 
+            "cout": cout_estime,
+            "mesure_provisoire": reparation_provisioire,
+            "siv": siv_present,
+            "plainte": statut_plainte,
+            "desc": description,
+            "urgent": is_urgent,
+            "chemin_fichier": None 
+        })
+        
+        if liste_faits_saisis:
+            final_data["acte"] = liste_faits_saisis[0].get('acte')
+            final_data["cat_cible"] = liste_faits_saisis[0].get('categorie')
+            final_data["cible_spec"] = liste_faits_saisis[0].get('objet')
+            final_data["obstacle"] = ", ".join(obs_final)
+        else:
+            final_data["acte"] = "Incident"
+            final_data["obstacle"] = "Aucun"
+
+    # =========================================================================
+    # BOUTONS D'ACTION
+    # =========================================================================
+    st.subheader("🚀 Validation finale")
+    
+    if not donnees_valides:
+        st.error("⚠️ Veuillez renseigner la localisation (Étape 1) avant de pouvoir enregistrer.")
+        
+    col_pdf, col_db = st.columns(2)
+
+    with col_pdf:
+        if st.button("📄 Générer PDF", disabled=not donnees_valides):
+            try:
+                pdf_bytes = generate_pdf.generer_pdf(final_data)
+                nom_pdf = f"Rapport_{final_data.get('date', datetime.now()).strftime('%Y-%m-%d')}_Securite.pdf"
+                st.download_button("📥 Télécharger PDF", data=pdf_bytes, file_name=nom_pdf, mime="application/pdf", use_container_width=True)
+                st.success("PDF prêt !")
+            except Exception as e:
+                st.error(f"Erreur PDF : {e}")
+
+    with col_db:
+        if st.button("💾 Enregistrer en Base", type="primary", use_container_width=True, disabled=not donnees_valides):
+            with st.spinner("Enregistrement..."):
+                if uploaded_file:
+                    path = sauvegarder_fichier_local(uploaded_file)
+                    if path: final_data["chemin_fichier"] = path
+                
+                result = db_manager.sauvegarder_incident_postgres(final_data)
+                
+                if result and result.get("success"):
+                    st.success(f"✅ Enregistré avec succès ! (ID: {result['id']})")
+                    st.balloons()
+                else:
+                    st.error("❌ Erreur SQL")
+                    st.error(result.get("error") if result else "Pas de réponse")
+                    if result and result.get("trace"):
+                        with st.expander("Détails"): st.code(result["trace"])
