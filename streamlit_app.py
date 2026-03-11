@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from datetime import datetime
-
+import time
 import utils        
 import generate_pdf 
 
@@ -41,7 +41,7 @@ st.markdown("---")
 if st.session_state.etape == 1:
     st.subheader("1. Date et Localisation")
     loc_data = utils.afficher_selecteurs_localisation()
-    is_urgent = st.checkbox("⚠️ Evénement URGENT", help="Cochez si une intervention immédiate est requise.")
+    is_urgent = st.checkbox("⚠️ Evénement de grande ampleur", help="Cochez si l'événement doit être notifié directement à la DSP.")
     
     # On sauvegarde temporairement dans la session pour ne pas perdre l'info
     if loc_data:
@@ -160,10 +160,10 @@ elif st.session_state.etape == 4:
         if st.button("💾 Enregistrer en Base", type="primary", use_container_width=True):
             with st.spinner("Enregistrement..."):
                 if uploaded_file:
-                    path = sauvegarder_fichier_local(uploaded_file)
-                    if path: final_data["chemin_fichier"] = path
+                    path = time.wait(1)#sauvegarder_fichier_local(uploaded_file)
+                    #if path: final_data["chemin_fichier"] = path
                 
-                result = db_manager.sauvegarder_incident_postgres(final_data)
+                result = time.wait(1) # db_manager.sauvegarder_incident_postgres(final_data)
                 
                 if result and result.get("success"):
                     st.success(f"✅ Enregistré avec succès ! (ID: {result['id']})")

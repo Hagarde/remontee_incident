@@ -40,11 +40,11 @@ TYPOLOGIE_GLOBAL = trier_avec_autre_fin(TYPOLOGIE_LISTE_BRUTE)
 # --- C. RÈGLES DE CASCADE : Typologie -> Mode Opératoire -> Cibles possibles ---
 REGLES_CASCADE = {
     "Intrusion": {
-        "Tentative d’intrusion": "ALL",
-        "Effraction": "ALL",
+        "Tentative d’intrusion": ["Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
+        "Effraction": ["Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
         "Escalade ou destruction des protections périmétriques": ["Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
-        "Usage de faux": "ALL", 
-        "Intrusion": "ALL"
+        "Usage de faux": ["Contrôle d'accès"], 
+        "Intrusion": ["Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"]
     },
     "Vol": {
         "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble aérien", "Câble souterrain", "Carburant", "Groupe Electrogène (GE)"],
@@ -85,7 +85,7 @@ REGLES_CASCADE = {
 }
 
 # --- D. AUTRES LISTES ---
-BARRIERES = ["Portail", "Portillion", "Grillage simple sans bavolet", "Grillage simple avec bavolet", 
+BARRIERES = ["Portail", "Portillon", "Grillage simple sans bavolet", "Grillage simple avec bavolet", 
              "Mur", "Contrôle d'accès", "Palplanche"]
 
 # =============================================================================
@@ -93,10 +93,10 @@ BARRIERES = ["Portail", "Portillion", "Grillage simple sans bavolet", "Grillage 
 # =============================================================================
 
 def INPUT_DATETIME(): return st.date_input("Date de l'événement", datetime.now())
-def INPUT_COUT_ESTIME(): return st.number_input("Coût estimé (k€)", min_value=0, step=1)  
-def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte de malveillance", placeholder="Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...", help="Si les informations suivantes sont disponibles, veuillez préciser : Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...")
+def INPUT_COUT_ESTIME(): return st.number_input("Coût estimé (k€)", min_value=0, step=1, help="Veuillez indiquer le coût estimé des dommages sur des objets ou infrastructures RTE")  
+def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte de malveillance", placeholder="Déroulement, Impact, Traitement, Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...", help="Si les informations suivantes sont disponibles, veuillez préciser : Déroulement, Impact, Traitement, Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...")
 def SELECT_BOX_MESURE_PROVISOIRE(): return st.selectbox("Mesures conservatoires mises en place ?", ['Oui', 'Non'], placeholder=None, help="Veuillez préciser le type de mesure conservatoire mise en place dans la description")
-def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il été déclenché ?", ['Oui', 'Non', "SIV absent du site"], placeholder=None)
+def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "SIV absent du site"], placeholder=None)
 def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
 def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique",options=BARRIERES, default=[],help="Renseignez le type de protection périmétrique franchis ou endommagé")
 
