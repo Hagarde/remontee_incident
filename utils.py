@@ -40,11 +40,9 @@ TYPOLOGIE_GLOBAL = trier_avec_autre_fin(TYPOLOGIE_LISTE_BRUTE)
 # --- C. RÈGLES DE CASCADE : Typologie -> Mode Opératoire -> Cibles possibles ---
 REGLES_CASCADE = {
     "Intrusion": {
-        "Tentative d’intrusion": ["Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
-        "Effraction": ["Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
-        "Escalade ou destruction des protections périmétriques": ["Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
-        "Usage de faux": ["Contrôle d'accès"], 
-        "Intrusion": ["Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"]
+        "Tentative d’intrusion": ["Site", "BR", "BI"],
+        "Effraction": ["Site", "BR", "BI"],
+        "Intrusion": ["Site", "BR", "BI"]
     },
     "Vol": {
         "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble aérien", "Câble souterrain", "Carburant", "Groupe Electrogène (GE)"],
@@ -86,7 +84,7 @@ REGLES_CASCADE = {
 
 # --- D. AUTRES LISTES ---
 BARRIERES = ["Portail", "Portillon", "Grillage simple sans bavolet", "Grillage simple avec bavolet", 
-             "Mur", "Contrôle d'accès", "Palplanche"]
+             "Mur", "Contrôle d'accès (Lecteur, cylindre, ...)", "Palplanche"]
 
 # =============================================================================
 # 2. FONCTIONS UI SIMPLES

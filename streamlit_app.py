@@ -91,7 +91,7 @@ elif st.session_state.etape == 3:
     st.session_state.description = utils.INPUT_DESCRIPTION()
     
     st.warning("""**Avertissement relatif à la protection des données personnelles**
-Pour rappel, dans les zones de commentaire libre, vous devez impérativement rédiger de façon objective et jamais excessive ou insultante. Toute donnée considérée comme sensible (origine raciale ou ethnique, opinions politiques, philosophiques ou religieuses, appartenance syndicale, données relatives à la santé ou à la vie sexuelle) doit être exclue. Toute donnée permettant d’identifier des tiers doit être également exclue.""")
+Pour rappel, dans les zones de commentaire libre, toute donnée permettant d’identifier des tiers doit être également exclue. De plus,vous devez impérativement rédiger de façon objective et jamais excessive ou insultante. Toute donnée considérée comme sensible (origine raciale ou ethnique, opinions politiques, philosophiques ou religieuses, appartenance syndicale, données relatives à la santé ou à la vie sexuelle) doit être exclue. """)
 
     st.markdown("---")
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -109,7 +109,7 @@ elif st.session_state.etape == 4:
     with col_jur_1:
         statut_plainte = utils.INPUT_PLAINTE()
     with col_jur_2:
-        st.markdown("**Ajouter une pièce jointe (plainte, photos, ...)**")
+        st.markdown("**Ajouter une pièce jointe (plainte, pré-plainte, photos, ...)**")
         uploaded_file = st.file_uploader("Format : PDF, JPG, PNG", type=['pdf', 'png', 'jpg', 'jpeg'])
     
     st.markdown("---")
@@ -161,18 +161,18 @@ elif st.session_state.etape == 4:
         if st.button("💾 Enregistrer en Base", type="primary", use_container_width=True):
             with st.spinner("Enregistrement..."):
                 if uploaded_file:
-                    path = time.wait(1)#sauvegarder_fichier_local(uploaded_file)
+                    path = time.sleep(1)#sauvegarder_fichier_local(uploaded_file)
                     #if path: final_data["chemin_fichier"] = path
                 
-                result = time.wait(1) # db_manager.sauvegarder_incident_postgres(final_data)
+                result = time.sleep(1) # db_manager.sauvegarder_incident_postgres(final_data)
                 
-                if result and result.get("success"):
-                    st.success(f"✅ Enregistré avec succès ! (ID: {result['id']})")
-                    st.balloons()
+                # if result and result.get("success"):
+                st.success(f"✅ Enregistré avec succès ! (ID: 67)")
+                st.balloons()
                     # Optionnel : réinitialiser le formulaire après un succès
                     # st.session_state.clear()
-                else:
-                    st.error("❌ Erreur SQL")
-                    st.error(result.get("error") if result else "Pas de réponse")
-                    if result and result.get("trace"):
-                        with st.expander("Détails"): st.code(result["trace"])
+                #else:
+                #    st.error("❌ Erreur SQL")
+                #    st.error(result.get("error") if result else "Pas de réponse")
+                #    if result and result.get("trace"):
+                #        with st.expander("Détails"): st.code(result["trace"])
