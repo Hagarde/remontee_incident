@@ -64,7 +64,8 @@ REGLES_CASCADE = {
         "Vol interne": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Carburant"],
         "Occupation illégale des locaux": ["Bâtiment Industriel", "Bâtiment de relayage", "Autre Bâtiment"],
         "Utilisation inappropriée des infrastructures": "ALL",
-        "Détérioration ou sabotage": "ALL"
+        "Détérioration ou sabotage": "ALL",
+        "Manœuvre sur réseau" : ["Bâtiment Industriel"]
     },
     "Agression / Intimidation": {
         "Violence physique": ["Salariés", "Prestataire"],
@@ -84,7 +85,7 @@ REGLES_CASCADE = {
 
 # --- D. AUTRES LISTES ---
 BARRIERES = ["Portail", "Portillon", "Grillage simple sans bavolet", "Grillage simple avec bavolet", 
-             "Mur", "Contrôle d'accès (Lecteur, cylindre, ...)", "Palplanche"]
+             "Mur", "Contrôle d'accès (Lecteur, cylindre, ...)", "Palplanche", "Double Clôture"]
 
 # =============================================================================
 # 2. FONCTIONS UI SIMPLES
@@ -94,7 +95,7 @@ def INPUT_DATETIME(): return st.date_input("Date de l'événement", datetime.now
 def INPUT_COUT_ESTIME(): return st.number_input("Coût estimé (k€)", min_value=0, step=1, help="Veuillez indiquer le coût estimé des dommages sur des objets ou infrastructures RTE")  
 def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte de malveillance", placeholder="Déroulement, Impact, Traitement, Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...", help="Si les informations suivantes sont disponibles, veuillez préciser : Déroulement, Impact, Traitement, Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...")
 def SELECT_BOX_MESURE_PROVISOIRE(): return st.selectbox("Mesures conservatoires mises en place ?", ['Oui', 'Non'], placeholder=None, help="Veuillez préciser le type de mesure conservatoire mise en place dans la description")
-def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "SIV absent du site"], placeholder=None)
+def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "Pas en service", "SIV absent du site"], placeholder=None)
 def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
 def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique",options=BARRIERES, default=[],help="Renseignez le type de protection périmétrique franchis ou endommagé")
 

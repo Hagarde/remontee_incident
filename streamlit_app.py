@@ -64,15 +64,25 @@ if st.session_state.etape == 1:
 elif st.session_state.etape == 2:
     st.subheader("2. Qualification des faits")
     st.info("💡 Vous pouvez ajouter plusieurs actes pour un même acte de malveillance.")
+    
     liste_faits_saisis = utils.gerer_saisie_actes()
     st.session_state.liste_faits_saisis = liste_faits_saisis
 
     st.markdown("---")
+    
+    # --- CONDITION DE VALIDATION ÉTAPE 2 ---
+    # L'étape est valide si au moins un acte complet a été saisi
+    etape2_valide = len(liste_faits_saisis) > 0
+
+    if not etape2_valide:
+        st.warning("⚠️ Veuillez renseigner au moins une typologie, un mode opératoire et une cible pour continuer.")
+
     col1, col2, col3 = st.columns([1, 2, 1])
     with col1:
         st.button("⬅️ Précédent", on_click=etape_precedente, use_container_width=True)
     with col3:
-        st.button("Suivant ➡️", on_click=etape_suivante, use_container_width=True)
+        # Le bouton est grisé (disabled) tant que etape2_valide est False
+        st.button("Suivant ➡️", on_click=etape_suivante, use_container_width=True, disabled=not etape2_valide)
 
 # =============================================================================
 # ÉTAPE 3 : DÉTAILS TECHNIQUES
@@ -91,14 +101,23 @@ elif st.session_state.etape == 3:
     st.session_state.description = utils.INPUT_DESCRIPTION()
     
     st.warning("""**Avertissement relatif à la protection des données personnelles**
-Pour rappel, dans les zones de commentaire libre, toute donnée permettant d’identifier des tiers doit être également exclue. De plus,vous devez impérativement rédiger de façon objective et jamais excessive ou insultante. Toute donnée considérée comme sensible (origine raciale ou ethnique, opinions politiques, philosophiques ou religieuses, appartenance syndicale, données relatives à la santé ou à la vie sexuelle) doit être exclue. """)
+Pour rappel, dans les zones de commentaire libre, toute donnée permettant d’identifier des tiers doit être également exclue. De plus, vous devez impérativement rédiger de façon objective et jamais excessive ou insultante. Toute donnée considérée comme sensible (origine raciale ou ethnique, opinions politiques, philosophiques ou religieuses, appartenance syndicale, données relatives à la santé ou à la vie sexuelle) doit être exclue.""")
 
     st.markdown("---")
+
+    # --- CONDITION DE VALIDATION ÉTAPE 3 ---
+    # Par exemple : on rend la Description OBLIGATOIRE (pas juste des espaces vides)
+    etape3_valide = len(st.session_state.description.strip()) > 0
+    
+    if not etape3_valide:
+        st.warning("⚠️ La description détaillée de l'acte est obligatoire.")
+
     col1, col2, col3 = st.columns([1, 2, 1])
     with col1:
         st.button("⬅️ Précédent", on_click=etape_precedente, use_container_width=True)
     with col3:
-        st.button("Suivant ➡️", on_click=etape_suivante, use_container_width=True)
+        # Le bouton est grisé (disabled) tant que etape3_valide est False
+        st.button("Suivant ➡️", on_click=etape_suivante, use_container_width=True, disabled=not etape3_valide)
 
 # =============================================================================
 # ÉTAPE 4 : JURIDIQUE & ACTIONS FINALES
