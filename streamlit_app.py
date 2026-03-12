@@ -94,6 +94,7 @@ elif st.session_state.etape == 3:
     with c1:
         st.session_state.cout_estime = utils.INPUT_COUT_ESTIME()
         st.session_state.reparation_provisioire = utils.SELECT_BOX_MESURE_PROVISOIRE()
+        st.session_state.secteur_cible = utils.SELECT_CIBLE()
     with c2:
         st.session_state.obstacles_selectionnes = utils.SELECT_OBSTACLE() if hasattr(utils, 'SELECT_OBSTACLE') else []
         st.session_state.siv_present = utils.SELECT_BOX_SIV_DECLENCHE()
