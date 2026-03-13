@@ -58,7 +58,7 @@ REGLES_CASCADE = {
         "Incendie volontaire d’éléments secondaires": ["Mur", "Portail", "Véhicule"]
     },
     "Sabotage": {
-        "Incendie volontaire d’infrastructures": ["Pylône", "Pylône aérosouterain", "Caniveau", "Transformateur", "Câble souterrain", "Câble aérien", "Bâtiment Industriel", "Bâtiment de relayage"],
+        "Incendie volontaire d’infrastructures": ["Pylône", "Pylône aérosouterain", "Caniveau", "Transformateur", "Câble souterrain", "Câble aérien", "Bâtiment Industriel", "Bâtiment de relayage", "Véhicule"],
         "Sciage": ["Pylône", "Pylône aérosouterain"],
         "Déboulonnage": ["Pylône", "Pylône aérosouterain"],
         "Sabotage des liaisons télécoms": ["Télécom", "RGT", "Caniveau"]
