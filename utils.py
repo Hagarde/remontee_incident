@@ -32,7 +32,7 @@ TOUTES_CIBLES = [item for sublist in CATEGORIES_CIBLES.values() for item in subl
 
 # --- B. TYPOLOGIES (Niveau 1) ---
 TYPOLOGIE_LISTE_BRUTE = [
-    "Intrusion", "Vol", "Vandalisme", "Sabotage", 
+    "Intrusion", "Vol", "Vandalisme", "Sabotage", "Drone",
     "Malveillance interne", "Agression / Intimidation", "Terrorisme"
 ]
 TYPOLOGIE_GLOBAL = trier_avec_autre_fin(TYPOLOGIE_LISTE_BRUTE)
@@ -43,6 +43,9 @@ REGLES_CASCADE = {
         "Tentative d’intrusion": ["Site", "BR", "BI"],
         "Effraction": ["Site", "BR", "BI"],
         "Intrusion": ["Site", "BR", "BI"]
+    },
+    "Drone": {
+        "Survol de drone": ["Site", "Pylône"]
     },
     "Vol": {
         "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble aérien", "Câble souterrain", "Carburant", "Groupe Electrogène (GE)"],
