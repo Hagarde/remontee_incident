@@ -21,7 +21,7 @@ def trier_avec_autre_fin(liste):
 # --- A. LISTE DES CIBLES (Objets spécifiques) ---
 
 CATEGORIES_CIBLES = {
-    "Infrastructures Réseau": ["Pylône", "Pylône aérosouterain", "Câble aérien", "Câble souterrain", "Transformateur", "Télécom", "Caniveau", "RGT"],
+    "Infrastructures Réseau": ["Pylône", "Pylône aérosouterain", "Câble", "Transformateur", "Télécom", "Caniveau", "RGT"],
     "Bâtiments & Sites": ["Bâtiment Industriel", "Bâtiment de relayage", "Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
     "Bien matériel": ["Véhicule", "Outillage", "Touret", "Carburant", "PC/Téléphone", "Groupe Electrogène (GE)"],
     "Employé": ["Salariés", "Prestataire"],
@@ -48,11 +48,11 @@ REGLES_CASCADE = {
         "Survol de drone": ["Site", "Pylône"]
     },
     "Vol": {
-        "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble aérien", "Câble souterrain", "Carburant", "Groupe Electrogène (GE)"],
+        "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble aérien", "Câble souterrain", "Carburant", "Effets personnels", "Groupe Electrogène (GE)"],
         "Tentative de vol": "ALL"
     },
     "Vandalisme": {
-        "Inscription illicite (Tag)": ["Mur", "Portail", "Clôture", "Bâtiment Industriel", "Bâtiment de relayage", "Véhicule"],
+        "Inscription illicite": ["Mur", "Portail", "Clôture", "Bâtiment Industriel", "Bâtiment de relayage", "Véhicule"],
         "Dégradation volontaire (Bris, destruction)": "ALL",
         "Dépôt sauvage": ["Mur", "Portail", "Clôture", "Autre Bâtiment"],
         "Incendie volontaire d’éléments secondaires": ["Mur", "Portail", "Véhicule"]
@@ -88,7 +88,7 @@ REGLES_CASCADE = {
 
 # --- D. AUTRES LISTES ---
 BARRIERES = ["Portail", "Portillon", "Grillage simple sans bavolet", "Grillage simple avec bavolet", 
-             "Mur", "Contrôle d'accès (Lecteur, cylindre, ...)", "Palplanche", "Double Clôture"]
+             "Mur", "Contrôle d'accès", "Palplanche", "Double Clôture"]
 
 # =============================================================================
 # 2. FONCTIONS UI SIMPLES
@@ -100,8 +100,8 @@ def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte 
 def SELECT_BOX_MESURE_PROVISOIRE(): return st.selectbox("Mesures conservatoires mises en place ?", ['Oui', 'Non'], placeholder=None, help="Veuillez préciser le type de mesure conservatoire mise en place dans la description")
 def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "Pas en service", "SIV absent du site"], placeholder=None)
 def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
-def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique",options=BARRIERES, default=[],help="Renseignez le type de protection périmétrique franchis ou endommagé")
-def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", ["Armement/BITD", "Événement", "Non applicable", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"])
+def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],help="Renseignez le type de protection périmétrique franchis ou endommagé")
+def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Non applicable", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=1)
 
 # =============================================================================
 # 3. GESTIONNAIRE DE LISTE DYNAMIQUE (FAITS)
