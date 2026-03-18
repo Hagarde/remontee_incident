@@ -32,7 +32,7 @@ TOUTES_CIBLES = [item for sublist in CATEGORIES_CIBLES.values() for item in subl
 
 # --- B. TYPOLOGIES (Niveau 1) ---
 TYPOLOGIE_LISTE_BRUTE = [
-    "Intrusion", "Vol", "Vandalisme", "Sabotage", "Drone",
+    "Intrusion", "Vol", "Vandalisme", "Sabotage", "Espionnage",
     "Malveillance interne", "Agression / Intimidation", "Terrorisme"
 ]
 TYPOLOGIE_GLOBAL = trier_avec_autre_fin(TYPOLOGIE_LISTE_BRUTE)
@@ -44,7 +44,7 @@ REGLES_CASCADE = {
         "Effraction": ["Site", "BR", "BI"],
         "Intrusion": ["Site", "BR", "BI"]
     },
-    "Drone": {
+    "Espionnage": {
         "Survol de drone": ["Site", "Pylône"]
     },
     "Vol": {
@@ -88,7 +88,7 @@ REGLES_CASCADE = {
 
 # --- D. AUTRES LISTES ---
 BARRIERES = ["Portail", "Portillon", "Grillage simple sans bavolet", "Grillage simple avec bavolet", 
-             "Mur", "Contrôle d'accès", "Palplanche", "Double Clôture"]
+             "Mur", "Contrôle d'accès", "Palplanche", "Double Clôture", "Porte", "Fenêtre"]
 
 # =============================================================================
 # 2. FONCTIONS UI SIMPLES
@@ -100,8 +100,8 @@ def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte 
 def SELECT_BOX_MESURE_PROVISOIRE(): return st.selectbox("Mesures conservatoires mises en place ?", ['Oui', 'Non'], placeholder=None, help="Veuillez préciser le type de mesure conservatoire mise en place dans la description")
 def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "Pas en service", "SIV absent du site"], placeholder=None)
 def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
-def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],help="Renseignez le type de protection périmétrique franchis ou endommagé")
-def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Non applicable", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=1)
+def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],placeholder="Slectionnez ", help="Renseignez le type de protection périmétrique franchis ou endommagé")
+def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=2)
 
 # =============================================================================
 # 3. GESTIONNAIRE DE LISTE DYNAMIQUE (FAITS)

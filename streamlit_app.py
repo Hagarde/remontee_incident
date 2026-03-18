@@ -129,7 +129,7 @@ elif st.session_state.etape == 4:
     with col_jur_1:
         statut_plainte = utils.INPUT_PLAINTE()
     with col_jur_2:
-        st.markdown("**Ajouter une pièce jointe (plainte, pré-plainte, photos, devis, ...)**")
+        st.markdown("**Ajouter une pièce jointe (plainte, pré-plainte, photos, devis, constat de huisssier, ...)**")
         uploaded_file = st.file_uploader("Format : PDF, JPG, PNG", type=['pdf', 'png', 'jpg', 'jpeg'])
     
     st.markdown("---")
