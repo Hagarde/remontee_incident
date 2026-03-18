@@ -104,7 +104,7 @@ def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-
 def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
 def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],placeholder="Sélectionnez la protection dégradée ou franchies", help="Renseignez le type de protection périmétrique franchis ou endommagé")
 def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=2)
-def SELECT_ENTITE() : return st.selectbox("À quelle entité apartenez-vous ?", sorted(["DPMI", "DIL", "DPT"]))
+
 
 # =============================================================================
 # 3. GESTIONNAIRE DE LISTE DYNAMIQUE (FAITS)
