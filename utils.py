@@ -20,6 +20,8 @@ def trier_avec_autre_fin(liste):
 
 # --- A. LISTE DES CIBLES (Objets spécifiques) ---
 
+ENTITES = ["DMPI", "DIL", "DPT"]
+ 
 CATEGORIES_CIBLES = {
     "Infrastructures Réseau": ["Pylône", "Pylône aérosouterain", "Câble", "Transformateur", "Télécom", "Caniveau", "RGT"],
     "Bâtiments & Sites": ["Bâtiment Industriel", "Bâtiment de relayage", "Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
@@ -40,25 +42,25 @@ TYPOLOGIE_GLOBAL = trier_avec_autre_fin(TYPOLOGIE_LISTE_BRUTE)
 # --- C. RÈGLES DE CASCADE : Typologie -> Mode Opératoire -> Cibles possibles ---
 REGLES_CASCADE = {
     "Intrusion": {
-        "Tentative d’intrusion": ["Site", "BR", "BI"],
-        "Effraction": ["Site", "BR", "BI"],
-        "Intrusion": ["Site", "BR", "BI"]
+        "Tentative d’intrusion": ["Site", "BR", "BI", "Poste en mer"],
+        "Effraction": ["Site", "BR", "BI", "Poste en mer"],
+        "Intrusion": ["Site", "BR", "BI", "Poste en mer"]
     },
     "Espionnage": {
         "Survol de drone": ["Site", "Pylône"]
     },
     "Vol": {
-        "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble aérien", "Câble souterrain", "Carburant", "Effets personnels", "Groupe Electrogène (GE)"],
+        "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble", "Carburant", "Effets personnels", "Groupe Electrogène (GE)"],
         "Tentative de vol": "ALL"
     },
     "Vandalisme": {
         "Inscription illicite": ["Mur", "Portail", "Clôture", "Bâtiment Industriel", "Bâtiment de relayage", "Véhicule"],
-        "Dégradation volontaire (Bris, destruction)": "ALL",
+        "Dégradation volontaire": "ALL",
         "Dépôt sauvage": ["Mur", "Portail", "Clôture", "Autre Bâtiment"],
         "Incendie volontaire d’éléments secondaires": ["Mur", "Portail", "Véhicule"]
     },
     "Sabotage": {
-        "Incendie volontaire d’infrastructures": ["Pylône", "Pylône aérosouterain", "Caniveau", "Transformateur", "Câble souterrain", "Câble aérien", "Bâtiment Industriel", "Bâtiment de relayage", "Véhicule"],
+        "Incendie volontaire d’infrastructures": ["Pylône", "Pylône aérosouterain", "Caniveau", "Transformateur", "Câble", "Bâtiment Industriel", "Bâtiment de relayage", "Véhicule"],
         "Sciage": ["Pylône", "Pylône aérosouterain"],
         "Déboulonnage": ["Pylône", "Pylône aérosouterain"],
         "Sabotage des liaisons télécoms": ["Télécom", "RGT", "Caniveau"]
@@ -81,14 +83,14 @@ REGLES_CASCADE = {
         "Prise d’otages, séquestration": ["Salariés", "Prestataire"],
         "Action coordonnée de masse": "ALL",
         "Menace ou chantage stratégique": ["Salariés", "Prestataire"],
-        "Sabotage massif d’installations critiques": ["Transformateur", "Bâtiment Industriel", "Bâtiment de relayage", "Télécom", "Pylône", "Pylône aérosouterain", "Câble aérien", "Câble souterrain"],
+        "Sabotage massif d’installations critiques": ["Transformateur", "Bâtiment Industriel", "Bâtiment de relayage", "Télécom", "Pylône", "Pylône aérosouterain", "Câble"],
         "Utilisation de substances chimiques, biologiques, radioactives": "ALL"
     },
 }
 
 # --- D. AUTRES LISTES ---
 BARRIERES = ["Portail", "Portillon", "Grillage simple sans bavolet", "Grillage simple avec bavolet", 
-             "Mur", "Contrôle d'accès", "Palplanche", "Double Clôture", "Porte", "Fenêtre"]
+             "Mur", "Contrôle d'accès", "Palplanche", "Double Clôture", "Porte", "Fenêtre", "Équipement de détection"]
 
 # =============================================================================
 # 2. FONCTIONS UI SIMPLES
@@ -100,8 +102,9 @@ def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte 
 def SELECT_BOX_MESURE_PROVISOIRE(): return st.selectbox("Mesures conservatoires mises en place ?", ['Oui', 'Non'], placeholder=None, help="Veuillez préciser le type de mesure conservatoire mise en place dans la description")
 def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "Pas en service", "SIV absent du site"], placeholder=None)
 def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
-def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],placeholder="Slectionnez ", help="Renseignez le type de protection périmétrique franchis ou endommagé")
+def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],placeholder="Sélectionnez la protection dégradée ou franchies", help="Renseignez le type de protection périmétrique franchis ou endommagé")
 def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=2)
+def SELECT_ENTITE() : return st.selectbox("À quelle entité apartenez-vous ?", sorted(["DPMI", "DIL", "DPT"]))
 
 # =============================================================================
 # 3. GESTIONNAIRE DE LISTE DYNAMIQUE (FAITS)
