@@ -216,7 +216,7 @@ def load_data(file_path):
     return df
 
 def afficher_selecteurs_localisation():
-    st.subheader("📍 Localisation de l'acte de malveillance")
+    entite = SELECT_ENTITE()
     date_incident = INPUT_DATETIME()
     
     mode = st.radio("Type de lieu :", ["🏢 Site", "🌍 Commune"], horizontal=True)
