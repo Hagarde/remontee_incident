@@ -30,7 +30,7 @@ st.title("🛡️ Detectout")
 st.markdown("---")
 
 # --- BARRE DE PROGRESSION VISUELLE ---
-etapes_noms = ["1. Localisation", "2. Qualification", "3. Détails techniques", "4. Juridique & Validation"]
+etapes_noms = ["1. Généralités", "2. Qualification", "3. Détails techniques", "4. Juridique & Validation"]
 st.progress(st.session_state.etape / 4)
 st.markdown(f"**Étape {st.session_state.etape} sur 4 : {etapes_noms[st.session_state.etape - 1]}**")
 st.markdown("---")
@@ -39,11 +39,11 @@ st.markdown("---")
 # ÉTAPE 1 : LOCALISATION
 # =============================================================================
 if st.session_state.etape == 1:
-    st.subheader("1. Date et Localisation")
-
+    st.subheader("1. Généralités")
+    entite = utils.SELECT_ENTITE()
     loc_data = utils.afficher_selecteurs_localisation()
     is_urgent = st.checkbox("⚠️ Événement de grande ampleur")
-    st.warning('"Événement de grande ampleur" inclut uniquement les événements malveillants majeurs, caractérisés par leurs conséquences physiques, matérielles ou médiatiques, ou par une sensibilité particulière. Nous limitons ainsi essentiellement aux **actes de sabotages**, de **terrorisme**, d**acte sous contrainte** ainsi que les **vols d’une forte ampleur**.')
+    st.warning('"Événement de grande ampleur" inclut uniquement les événements malveillants majeurs, caractérisés par leurs conséquences physiques, matérielles ou médiatiques, ou par une sensibilité particulière. Nous limitons ainsi essentiellement aux **actes de sabotages**, de **terrorisme**, **sous contrainte** ainsi que les **vols d’une forte ampleur**.')
     
     # On sauvegarde temporairement dans la session pour ne pas perdre l'info
     if loc_data:

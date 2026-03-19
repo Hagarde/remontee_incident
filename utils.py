@@ -44,13 +44,17 @@ REGLES_CASCADE = {
     "Intrusion": {
         "Tentative d’intrusion": ["Site", "BR", "BI", "Poste en mer"],
         "Effraction": ["Site", "BR", "BI", "Poste en mer"],
-        "Intrusion": ["Site", "BR", "BI", "Poste en mer"]
+        "Intrusion": ["Site", "BR", "BI", "Poste en mer"],
+        "Occupation illégale des locaux" : ["Site", "BR", "BI", "Poste en mer"],
+        "Accès sous contrainte" : ["Site", "BR", "BI", "Poste en mer"]
     },
     "Espionnage": {
-        "Survol de drone": ["Site", "Pylône"]
+        "Drone Aérien": ["Site", "Pylône"],
+        "Drone Terrestre": ["Site", "Pylône"],
+        "Drone sous-marin": ["Site", "Pylône"]
     },
     "Vol": {
-        "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble", "Carburant", "Effets personnels", "Groupe Electrogène (GE)"],
+        "Vol d’un bien matériel ou industriel": ["Outillage", "PC/Téléphone", "Véhicule", "Touret", "RGT", "Câble", "Carburant", "Effets personnels", "Moyen d'accès", "Groupe Electrogène (GE)"],
         "Tentative de vol": "ALL"
     },
     "Vandalisme": {
@@ -96,15 +100,15 @@ BARRIERES = ["Portail", "Portillon", "Grillage simple sans bavolet", "Grillage s
 # 2. FONCTIONS UI SIMPLES
 # =============================================================================
 
-def INPUT_DATETIME(): return st.date_input("Date de l'événement", datetime.now())
+def INPUT_DATETIME(): return st.date_input("Date de l'événement", datetime.now(), format="DD/MM/YYYY")
 def INPUT_COUT_ESTIME(): return st.number_input("Coût estimé (k€)", min_value=0, step=1, help="Veuillez indiquer le coût estimé des dommages sur des objets ou infrastructures RTE")  
 def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte de malveillance", placeholder="Déroulement, Impact, Traitement, Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...", help="Si les informations suivantes sont disponibles, veuillez préciser : Déroulement, Impact, Traitement, Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...")
 def SELECT_BOX_MESURE_PROVISOIRE(): return st.selectbox("Mesures conservatoires mises en place ?", ['Oui', 'Non'], placeholder=None, help="Veuillez préciser le type de mesure conservatoire mise en place dans la description")
 def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "Pas en service", "SIV absent du site"], placeholder=None)
 def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
 def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],placeholder="Sélectionnez la protection dégradée ou franchies", help="Renseignez le type de protection périmétrique franchis ou endommagé")
-def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=2)
-
+def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Automobile", "Papeterie", "Base Industrielle Technologique de la Sécurité", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=2)
+def SELECT_ENTITE() : return st.selectbox("À quelle entité appartenaez-vous ?", sorted(["DPMI", "Prestataire", "DPT", "DIL"]))
 
 # =============================================================================
 # 3. GESTIONNAIRE DE LISTE DYNAMIQUE (FAITS)
