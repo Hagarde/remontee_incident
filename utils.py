@@ -107,8 +107,8 @@ def SELECT_BOX_MESURE_PROVISOIRE(): return st.selectbox("Mesures conservatoires 
 def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "Pas en service", "SIV absent du site"], placeholder=None)
 def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
 def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],placeholder="Sélectionnez la protection dégradée ou franchies", help="Renseignez le type de protection périmétrique franchis ou endommagé")
-def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Automobile", "Papeterie", "Base Industrielle Technologique de la Sécurité", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=2)
-def SELECT_ENTITE() : return st.selectbox("À quelle entité appartenaez-vous ?", sorted(["DPMI", "Prestataire", "DPT", "DIL"]))
+def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Automobile", "Papeterie", "Base Industrielle Technologique de la Sécurité", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=4)
+def SELECT_ENTITE() : return st.selectbox("À quelle entité appartenez-vous ?", sorted(["DPMI", "Prestataire", "DPT", "DIL"]))
 
 # =============================================================================
 # 3. GESTIONNAIRE DE LISTE DYNAMIQUE (FAITS)
