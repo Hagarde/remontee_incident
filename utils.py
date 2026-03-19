@@ -217,6 +217,9 @@ def load_data(file_path):
 
 def afficher_selecteurs_localisation():
     entite = SELECT_ENTITE()
+    prestataire = None
+    if entite == "Prestataire" : 
+        prestataire = st.text_input("Quel société de prestataire ")
     date_incident = INPUT_DATETIME()
     
     mode = st.radio("Type de lieu :", ["🏢 Site", "🌍 Commune"], horizontal=True)
