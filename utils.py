@@ -25,7 +25,7 @@ ENTITES = ["DMPI", "DIL", "DPT"]
 CATEGORIES_CIBLES = {
     "Infrastructures Réseau": ["Pylône", "Pylône aérosouterain", "Câble", "Transformateur", "Télécom", "Caniveau", "RGT"],
     "Bâtiments & Sites": ["Bâtiment Industriel", "Bâtiment de relayage", "Mur", "Portail", "Palplanche", "Clôture", "Autre Bâtiment"],
-    "Bien matériel": ["Véhicule", "Outillage", "Touret", "Carburant", "PC/Téléphone", "Groupe Electrogène (GE)"],
+    "Bien matériel": ["Véhicule", "Outillage", "Touret", "Carburant", "PC/Téléphone", "Groupe Electrogène (GE)", "Base vie"],
     "Employé": ["Salariés", "Prestataire"],
     "Aucun": ["Aucun"],
 }
@@ -99,16 +99,20 @@ BARRIERES = ["Portail", "Portillon", "Grillage simple sans bavolet", "Grillage s
 # =============================================================================
 # 2. FONCTIONS UI SIMPLES
 # =============================================================================
+placeholder_description = """Déroulement (Détails des faits, Revendication locale, Fuite des intrus, ...)
+Impact (Conséquence sur l'exploitation ou le projet, ...)
+Traitement (Mesures conservatoires, interpellation, ...)"""
 
-def INPUT_DATETIME(): return st.date_input("Date de l'événement", datetime.now(), format="DD/MM/YYYY")
+def INPUT_DATETIME(): return st.date_input("Date de l'événement :red[*]", datetime.now(), format="DD/MM/YYYY")
 def INPUT_COUT_ESTIME(): return st.number_input("Coût estimé (k€)", min_value=0, step=1, help="Veuillez indiquer le coût estimé des dommages sur des objets ou infrastructures RTE")  
-def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte de malveillance", placeholder="Déroulement, Impact, Traitement, Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...", help="Si les informations suivantes sont disponibles, veuillez préciser : Déroulement, Impact, Traitement, Client ciblé, prestataire visé, revendication locale, mesures conservatoires, interpellation, fuite des intrus, ...")
+def INPUT_DESCRIPTION(): return st.text_area("Description détaillée de l'acte de malveillance :red[*]", placeholder=placeholder_description, help="Si les informations suivantes sont disponibles, veuillez préciser : " + placeholder_description)
 def SELECT_BOX_MESURE_PROVISOIRE(): return st.selectbox("Mesures conservatoires mises en place ?", ['Oui', 'Non'], placeholder=None, help="Veuillez préciser le type de mesure conservatoire mise en place dans la description")
 def SELECT_BOX_SIV_DECLENCHE(): return st.selectbox("Si un SIV est installé, a-t-il fonctionné correctement ?", ['Oui', 'Non', "Pas en service", "SIV absent du site"], placeholder=None)
-def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"])
+def INPUT_PLAINTE(): return st.selectbox("Statut de la plainte :red[*]", ["Déposée", "Dépôt prévu", "Pas de plainte prévue"], placeholder=None)
 def SELECT_OBSTACLE() : return st.multiselect("Dégradation périmétrique et périphérique",options=BARRIERES, default=[],placeholder="Sélectionnez la protection dégradée ou franchies", help="Renseignez le type de protection périmétrique franchis ou endommagé")
-def SELECT_CIBLE() : return st.selectbox("Secteur du client impacté ou ciblé indirectement par l'AM ?", sorted(["Armement/BITD", "Événement", "Automobile", "Papeterie", "Base Industrielle Technologique de la Sécurité", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie","Sidérurgie", "Technologie", "Transport"]), index=4)
-def SELECT_ENTITE() : return st.selectbox("À quelle entité appartenez-vous ?", sorted(["DPMI", "Prestataire", "DPT", "DIL"]))
+def SELECT_ENTITE() : return st.selectbox("À quelle entité appartenez-vous ? :red[*]", sorted(["DPMI", "Prestataire", "DPT", "DIL"]))
+def SELECT_CIBLE() : return st.selectbox("Secteur d'activité impacté par l'acte de malveillance", sorted(["Armement/BITD", "Événement", "Automobile", "Papeterie", "Base Industrielle Technologique de la Sécurité", "Non applicable", "RTE", "Cimenterie", "Nucléaire", "Pétrochimie", "Sidérurgie", "Technologie", "Transport", "Prestataire"]), index=4)
+def IMPACT_CLIENT() : return st.checkbox("Impact client ?")
 
 # =============================================================================
 # 3. GESTIONNAIRE DE LISTE DYNAMIQUE (FAITS)
@@ -135,7 +139,7 @@ def gerer_saisie_actes():
             # On nettoie la liste globale pour ne pas afficher "Autre"
             typo_propres = sorted(TYPOLOGIE_GLOBAL)
             typologie = st.selectbox(
-                "1. Typologie", 
+                "1. Typologie :red[*]",  
                 options=typo_propres, 
                 key=f"typo_{uid}", 
                 accept_new_options=True,
@@ -146,7 +150,7 @@ def gerer_saisie_actes():
         with c2:
             raw_modes = list(REGLES_CASCADE.get(typologie, {}).keys()) if typologie in REGLES_CASCADE else []
             mode_op = st.selectbox(
-                "2. Mode Opératoire", 
+                "2. Mode Opératoire :red[*]", 
                 options=sorted(raw_modes), 
                 key=f"mode_{uid}", 
                 accept_new_options=True,
@@ -161,7 +165,7 @@ def gerer_saisie_actes():
                 liste_cibles_brutes = TOUTES_CIBLES if regle == "ALL" else regle
                 
             cible = st.selectbox(
-                "3. Cible Spécifique", 
+                "3. Cible Spécifique :red[*]", 
                 options=sorted(liste_cibles_brutes), 
                 key=f"cible_{uid}", 
                 accept_new_options=True,
@@ -180,7 +184,7 @@ def gerer_saisie_actes():
 # =============================================================================
 # 4. LOCALISATION
 # =============================================================================
-@st.cache_data
+
 @st.cache_data
 def load_data(file_path):
     """ Charge un fichier de données selon son extension (CSV ou Parquet) """
@@ -242,7 +246,7 @@ def afficher_selecteurs_localisation():
         if is_site and 'GMR_Nom_Complet' in df.columns: mask |= df["GMR_Nom_Complet"].str.contains(rech.upper(), na=False)
         filtered = df[mask]
         if not filtered.empty:
-            choix = st.selectbox("Sélectionnez :", filtered["Label_Recherche"].head(30).tolist())
+            choix = st.selectbox("Sélectionnez : :red[*]", filtered["Label_Recherche"].head(30).tolist())
             sel = df[df["Label_Recherche"] == choix].iloc[0]
         else: st.warning("Aucun résultat.")
 
