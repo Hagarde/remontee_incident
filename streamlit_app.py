@@ -26,7 +26,15 @@ def etape_precedente():
 # =============================================================================
 # UI PRINCIPALE
 # =============================================================================
-st.title("🛡️ Detectout")
+col_titre, col_logo = st.columns([5, 1]) # Ratio 1/5 pour la largeur
+
+with col_titre:
+    # On met un peu d'espace au-dessus pour aligner avec le logo
+    st.markdown("<h1 style='margin-top: -15px;'> 🛡️ Detectout</h1>", unsafe_allow_html=True)
+with col_logo:
+    # Ajustez la largeur (width) selon la taille voulue
+    st.image("./data/group.svg", width=140) 
+
 st.markdown("---")
 
 # --- BARRE DE PROGRESSION VISUELLE ---
@@ -54,9 +62,8 @@ if st.session_state.etape == 1:
     st.markdown("---")
     col1, col2, col3 = st.columns([1, 2, 1])
     with col3:
-        # On empêche de passer à la suite si la localisation n'est pas remplie
-        if st.button("Suivant ➡️", use_container_width=True, disabled=loc_data is None):
-            etape_suivante()
+        # Utilisation de on_click au lieu de if st.button():
+        st.button("Suivant ➡️", on_click=etape_suivante, use_container_width=True, disabled=loc_data is None)
 
 # =============================================================================
 # ÉTAPE 2 : QUALIFICATION
@@ -189,7 +196,7 @@ elif st.session_state.etape == 4:
                 
                 # if result and result.get("success"):
                 st.success(f"✅ Enregistré avec succès ! (ID: 67)")
-                st.balloons()
+                st.toast("Nous vous remercions de votre contribution", icon='🛡️')
                     # Optionnel : réinitialiser le formulaire après un succès
                     # st.session_state.clear()
                 #else:
