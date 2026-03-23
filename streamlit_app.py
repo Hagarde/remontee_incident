@@ -51,7 +51,7 @@ if st.session_state.etape == 1:
     
     loc_data = utils.afficher_selecteurs_localisation()
     is_urgent = st.checkbox("⚠️ Événement de grande ampleur")
-    st.warning('"Événement de grande ampleur" inclut uniquement les événements malveillants majeurs, caractérisés par leurs conséquences physiques, matérielles ou médiatiques, ou par une sensibilité particulière. Nous limitons ainsi essentiellement aux **actes de sabotages**, de **terrorisme**, **sous contrainte** ainsi que les **vols d’une forte ampleur**.')
+    st.warning('"Événement de grande ampleur" inclut uniquement les événements malveillants majeurs, caractérisés par leurs conséquences physiques, matérielles ou médiatiques, ou par une sensibilité particulière. Nous limitons ainsi essentiellement aux **actes de sabotage**, de **terrorisme**, **sous contrainte** ainsi que les **vols d’une forte ampleur**.')
     # On sauvegarde temporairement dans la session pour ne pas perdre l'info
     if loc_data:
         st.session_state.loc_data = loc_data
